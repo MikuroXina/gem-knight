@@ -15,7 +15,7 @@ impl Gem {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct Card {
     pub kind: Gem,
     pub points: u8,
@@ -36,7 +36,7 @@ impl Card {
     }
 }
 
-#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct CardCost {
     blues: u8,
     greens: u8,
