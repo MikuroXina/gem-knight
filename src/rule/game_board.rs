@@ -33,7 +33,7 @@ impl GameBoard {
             2 => 7,
             3 => 5,
             4 => 4,
-            _ => panic!("Splendor is for only 2-4 players"),
+            _ => panic!("Splendor is only for 2-4 players"),
         };
         let mut bank = ChipStack::new().with_chips_to(Chip::Golden, 7);
         for gem in Gem::all_gems() {
