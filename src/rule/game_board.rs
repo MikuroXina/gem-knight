@@ -30,9 +30,9 @@ impl GameBoard {
         let picked_nobles: Vec<_> = nobles[..(players as usize) + 1].to_vec();
 
         let using_chips = match players {
-            2 => 7,
+            2 => 4,
             3 => 5,
-            4 => 4,
+            4 => 7,
             _ => panic!("Splendor is only for 2-4 players"),
         };
         let mut bank = ChipStack::new().with_chips_to(Chip::Golden, 5);
