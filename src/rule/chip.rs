@@ -22,6 +22,19 @@ impl From<Gem> for Chip {
     }
 }
 
+impl Chip {
+    pub const fn all_chips() -> [Chip; 6] {
+        [
+            Chip::Blue,
+            Chip::Green,
+            Chip::Red,
+            Chip::Black,
+            Chip::White,
+            Chip::Golden,
+        ]
+    }
+}
+
 /// The state representation of stack of chips.
 ///
 /// - 1-4 bits: blue chips
