@@ -93,6 +93,11 @@ impl GameBoard {
         self.bank.sub_chips_to(chip, 2);
     }
 
+    pub fn pick_golden_chip(&mut self) {
+        debug_assert!(0 < self.bank.chips(Chip::Golden));
+        self.bank.sub_chips_to(Chip::Golden, 1);
+    }
+
     pub fn return_chips(&mut self, chips: ChipStack) {
         self.bank = self.bank.merge(chips);
     }
