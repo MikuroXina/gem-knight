@@ -52,6 +52,10 @@ impl GameBoard {
         }
     }
 
+    pub fn card_row(&self, index: usize) -> &CardRow {
+        &self.card_rows[index]
+    }
+
     pub fn open_cards(&'_ self) -> impl Iterator<Item = OpenCard<'_>> {
         self.card_rows
             .iter()
@@ -137,6 +141,10 @@ impl CardRow {
             let Some(top) = self.stock.pop() else { return; };
             self.open.push(top);
         }
+    }
+
+    pub fn open_cards(&self) -> &[Card] {
+        &self.open
     }
 }
 
