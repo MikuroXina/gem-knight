@@ -44,6 +44,20 @@ impl PlayerBoard {
         self.bought_cards.iter().map(|card| card.points).sum::<u8>() + self.visited_nobles * 3
     }
 
+    pub fn bring_differ_three_chips(&mut self, gems: [Gem; 3]) {
+        for gem in gems {
+            self.chip_stack = self.chip_stack.add_chips_to(gem.into(), 1);
+        }
+    }
+
+    pub fn bring_same_two_chips(&mut self, gem: Gem) {
+        self.chip_stack = self.chip_stack.add_chips_to(gem.into(), 2);
+    }
+
+    pub fn bring_golden_chip(&mut self) {
+        self.chip_stack = self.chip_stack.add_chips_to(Chip::Golden, 1);
+    }
+
     pub fn can_buy(&self, card: &Card, use_golden_chips: bool) -> bool {
         let eliminated_costs = card.cost.eliminated(self.chip_stack);
         eliminated_costs == 0
