@@ -3,7 +3,15 @@ use super::{
     noble::Noble,
 };
 
-pub fn standard_deck() -> ([Vec<Card>; 3], Vec<Noble>) {
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub struct Deck {
+    pub level1: Vec<Card>,
+    pub level2: Vec<Card>,
+    pub level3: Vec<Card>,
+    pub nobles: Vec<Noble>,
+}
+
+pub fn standard_deck() -> Deck {
     let level1 = vec![
         Card::new(Blue, 0, [0, 0, 0, 2, 1]),
         Card::new(Blue, 0, [2, 0, 2, 0, 1]),
@@ -109,5 +117,10 @@ pub fn standard_deck() -> ([Vec<Card>; 3], Vec<Noble>) {
         Noble::new([(Black, 4), (White, 4)]),
         Noble::new([(Blue, 4), (Green, 4)]),
     ];
-    ([level1, level2, level3], nobles)
+    Deck {
+        level1,
+        level2,
+        level3,
+        nobles,
+    }
 }

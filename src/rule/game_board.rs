@@ -5,7 +5,7 @@ use rand::Rng;
 use super::{
     card::{Card, Gem},
     chip::{Chip, ChipStack},
-    deck::standard_deck,
+    deck::{standard_deck, Deck},
     noble::Noble,
 };
 
@@ -18,7 +18,12 @@ pub struct GameBoard {
 
 impl GameBoard {
     pub fn new(players: u8, rng: &mut impl Rng) -> Self {
-        let ([mut level1, mut level2, mut level3], mut nobles) = standard_deck();
+        let Deck {
+            mut level1,
+            mut level2,
+            mut level3,
+            mut nobles,
+        } = standard_deck();
         use rand::seq::SliceRandom;
         level1.shuffle(rng);
         level2.shuffle(rng);
