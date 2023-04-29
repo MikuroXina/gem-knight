@@ -58,6 +58,12 @@ impl PlayerBoard {
         self.chip_stack = self.chip_stack.add_chips_to(Chip::Golden, 1);
     }
 
+    pub fn drop_chips(&mut self, to_drop: ChipStack) {
+        for chip in Chip::all_chips() {
+            self.chip_stack = self.chip_stack.sub_chips_to(chip, to_drop.chips(chip));
+        }
+    }
+
     pub fn can_buy(&self, card: &Card, use_golden_chips: bool) -> bool {
         let eliminated_costs = card.cost.eliminated(self.chip_stack);
         eliminated_costs == 0

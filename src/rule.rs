@@ -76,11 +76,16 @@ fn player_turn(
         }
         Choice::Nothing => {}
     }
+    while player_board.chip_stack().all_chips_count() <= 10 {
+        let to_drop = player.force_drop(player_board);
+        player_board.drop_chips(to_drop);
+    }
 }
 
 pub trait Player {
     fn ask_choice(&mut self, your: &PlayerBoard, game: &GameBoard) -> Choice;
 
+    /// Proposes chips to drop until the number of chips is lesser than 11.
     fn force_drop(&self, your: &PlayerBoard) -> ChipStack;
 }
 
