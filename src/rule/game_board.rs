@@ -78,6 +78,13 @@ impl GameBoard {
         picked
     }
 
+    pub fn pick_deck_top(&mut self, keeping_deck_level: u8) -> Card {
+        self.card_rows[keeping_deck_level as usize]
+            .stock
+            .pop()
+            .expect("deck was empty")
+    }
+
     pub fn bank(&self) -> &ChipStack {
         &self.bank
     }

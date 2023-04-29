@@ -75,8 +75,16 @@ fn player_turn(
                 game_board.return_chips(paid);
             }
         }
-        Choice::Keep(card) => {
+        Choice::KeepOpen(card) => {
             let picked = game_board.pick_open_card(card);
+            player_board.keep(picked);
+            if 0 < game_board.bank().chips(Chip::Golden) {
+                game_board.pick_golden_chip();
+                player_board.bring_golden_chip();
+            }
+        }
+        Choice::KeepTop { keeping_deck_level } => {
+            let picked = game_board.pick_deck_top(keeping_deck_level);
             player_board.keep(picked);
             if 0 < game_board.bank().chips(Chip::Golden) {
                 game_board.pick_golden_chip();
@@ -104,6 +112,7 @@ pub enum Choice<'a> {
     TwoSameChips(Gem),
     BuyOpen(OpenCard<'a>),
     BuyHand(Card),
-    Keep(OpenCard<'a>),
+    KeepOpen(OpenCard<'a>),
+    KeepTop { keeping_deck_level: u8 },
     Nothing,
 }
