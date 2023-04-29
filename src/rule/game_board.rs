@@ -52,7 +52,7 @@ impl GameBoard {
         }
     }
 
-    pub fn open_cards(&'_ self) -> Vec<OpenCard<'_>> {
+    pub fn open_cards(&'_ self) -> impl Iterator<Item = OpenCard<'_>> {
         self.card_rows
             .iter()
             .enumerate()
@@ -67,7 +67,6 @@ impl GameBoard {
                         _phantom: PhantomData,
                     })
             })
-            .collect()
     }
 
     pub fn pick_open_card(&'_ mut self, open: OpenCard<'_>) -> Card {
