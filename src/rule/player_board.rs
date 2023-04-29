@@ -102,6 +102,7 @@ impl PlayerBoard {
 
     pub fn keep(&mut self, card: Card) {
         self.kept_cards.push(card);
+        debug_assert!(self.kept_cards.len() <= 3);
     }
 
     pub fn can_welcome_noble(&self, noble: &Noble) -> bool {
