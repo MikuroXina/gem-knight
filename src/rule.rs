@@ -91,7 +91,6 @@ fn player_turn(
                 player_board.bring_golden_chip();
             }
         }
-        Choice::Nothing => {}
     }
     while player_board.chip_stack().all_chips_count() <= 10 {
         let to_drop = player.force_drop(player_board);
@@ -114,5 +113,4 @@ pub enum Choice<'a> {
     BuyHand(Card),
     KeepOpen(OpenCard<'a>),
     KeepTop { keeping_deck_level: u8 },
-    Nothing,
 }
