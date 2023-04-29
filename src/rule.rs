@@ -96,6 +96,7 @@ fn player_turn(
         let to_drop = player.force_drop(player_board);
         player_board.drop_chips(to_drop);
     }
+    // TODO: noble welcome phase, but the strategy for gem-knight does not consider nobles
 }
 
 pub trait Player {
