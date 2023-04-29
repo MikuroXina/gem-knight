@@ -98,4 +98,11 @@ impl ChipStack {
         let saturated_sub = self.chips(variant).saturating_sub(diff);
         self.with_chips_to(variant, saturated_sub)
     }
+
+    pub fn merge(mut self, other: Self) -> Self {
+        for chip in Chip::all_chips() {
+            self = self.add_chips_to(chip, other.chips(chip));
+        }
+        self
+    }
 }
