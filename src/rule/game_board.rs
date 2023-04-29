@@ -72,6 +72,30 @@ impl GameBoard {
         self.card_rows[open.source_row_index].update_open();
         picked
     }
+
+    pub fn bank(&self) -> &ChipStack {
+        &self.bank
+    }
+
+    pub fn pick_differ_three_chips(&mut self, gems: [Gem; 3]) {
+        debug_assert_ne!(gems[0], gems[1]);
+        debug_assert_ne!(gems[1], gems[2]);
+        for gem in gems {
+            let chip = gem.into();
+            debug_assert!(0 < self.bank.chips(chip));
+            self.bank.sub_chips_to(chip, 1);
+        }
+    }
+
+    pub fn pick_same_two_chips(&mut self, gem: Gem) {
+        let chip = gem.into();
+        debug_assert!(4 <= self.bank.chips(chip));
+        self.bank.sub_chips_to(chip, 2);
+    }
+
+    pub fn return_chips(&mut self, chips: ChipStack) {
+        self.bank = self.bank.merge(chips);
+    }
 }
 
 #[derive(Debug, Clone)]
