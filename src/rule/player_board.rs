@@ -64,19 +64,23 @@ impl PlayerBoard {
             || (use_golden_chips && eliminated_costs <= self.chip_stack.chips(Chip::Golden))
     }
 
-    pub fn buy(&mut self, card: Card, use_golden_chips: bool) {
+    /// Buys the card and returns paid chips.
+    pub fn buy(&mut self, card: Card, use_golden_chips: bool) -> ChipStack {
         debug_assert!(self.can_buy(&card, use_golden_chips));
 
         let eliminated_costs = card.cost.eliminated(self.chip_stack);
+        let mut paid = ChipStack::new();
         for gem in Gem::all_gems() {
-            self.chip_stack = self
-                .chip_stack
-                .sub_chips_to(gem.into(), card.cost.cost_by(gem));
+            let chip = gem.into();
+            self.chip_stack = self.chip_stack.sub_chips_to(chip, card.cost.cost_by(gem));
+            paid = paid.add_chips_to(chip, card.cost.cost_by(gem));
         }
         if use_golden_chips {
             self.chip_stack.sub_chips_to(Chip::Golden, eliminated_costs);
+            paid = paid.add_chips_to(Chip::Golden, eliminated_costs);
         }
         self.bought_cards.push(card);
+        paid
     }
 
     pub fn keep(&mut self, card: Card) {
