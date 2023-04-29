@@ -1,7 +1,7 @@
 use rand::{rngs::SmallRng, SeedableRng};
 
 use self::{
-    card::Gem,
+    card::{Card, Gem},
     chip::{Chip, ChipStack},
     game_board::{GameBoard, OpenCard},
     player_board::PlayerBoard,
@@ -56,13 +56,22 @@ fn player_turn(
             game_board.pick_same_two_chips(gem);
             player_board.bring_same_two_chips(gem);
         }
-        Choice::Buy(target) => {
+        Choice::BuyOpen(target) => {
             for use_golden_chips in [false, true] {
                 if !player_board.can_buy(target.as_ref(), use_golden_chips) {
                     continue;
                 }
                 let picked = game_board.pick_open_card(target);
-                let paid = player_board.buy(picked, false);
+                let paid = player_board.buy_open(picked, use_golden_chips);
+                game_board.return_chips(paid);
+            }
+        }
+        Choice::BuyHand(target) => {
+            for use_golden_chips in [false, true] {
+                if !player_board.can_buy(&target, use_golden_chips) {
+                    continue;
+                }
+                let paid = player_board.buy_kept(target, use_golden_chips);
                 game_board.return_chips(paid);
             }
         }
@@ -93,7 +102,8 @@ pub trait Player {
 pub enum Choice<'a> {
     ThreeDifferentChips([Gem; 3]),
     TwoSameChips(Gem),
-    Buy(OpenCard<'a>),
+    BuyOpen(OpenCard<'a>),
+    BuyHand(Card),
     Keep(OpenCard<'a>),
     Nothing,
 }

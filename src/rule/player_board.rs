@@ -70,8 +70,8 @@ impl PlayerBoard {
             || (use_golden_chips && eliminated_costs <= self.chip_stack.chips(Chip::Golden))
     }
 
-    /// Buys the card and returns paid chips.
-    pub fn buy(&mut self, card: Card, use_golden_chips: bool) -> ChipStack {
+    /// Buys the open card and returns paid chips.
+    pub fn buy_open(&mut self, card: Card, use_golden_chips: bool) -> ChipStack {
         debug_assert!(self.can_buy(&card, use_golden_chips));
 
         let eliminated_costs = card.cost.eliminated(self.chip_stack);
@@ -87,6 +87,17 @@ impl PlayerBoard {
         }
         self.bought_cards.push(card);
         paid
+    }
+
+    /// Buys the kept card and returns paid chips.
+    pub fn buy_kept(&mut self, card: Card, use_golden_chips: bool) -> ChipStack {
+        let pos = self
+            .kept_cards
+            .iter()
+            .position(|kept| kept == &card)
+            .expect("the card must be kept");
+        self.kept_cards.remove(pos);
+        self.buy_open(card, use_golden_chips)
     }
 
     pub fn keep(&mut self, card: Card) {
