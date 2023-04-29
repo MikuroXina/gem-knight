@@ -33,6 +33,10 @@ impl Chip {
             Chip::Golden,
         ]
     }
+
+    pub const fn normal_chips() -> [Chip; 5] {
+        [Chip::Blue, Chip::Green, Chip::Red, Chip::Black, Chip::White]
+    }
 }
 
 /// The state representation of stack of chips.
@@ -64,6 +68,20 @@ impl ChipStack {
 
     pub const fn chips(self, variant: Chip) -> u8 {
         ((self.0 >> Self::shifts(variant)) & 0xf) as u8
+    }
+
+    pub fn all_chips_count(self) -> u8 {
+        Chip::all_chips()
+            .into_iter()
+            .map(|chip| self.chips(chip))
+            .sum()
+    }
+
+    pub fn all_chips_count_without_golden(self) -> u8 {
+        Chip::normal_chips()
+            .into_iter()
+            .map(|chip| self.chips(chip))
+            .sum()
     }
 
     pub const fn with_chips_to(self, variant: Chip, to_set: u8) -> Self {
