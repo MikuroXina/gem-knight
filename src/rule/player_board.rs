@@ -96,7 +96,7 @@ impl PlayerBoard {
             .iter()
             .position(|kept| kept == &card)
             .expect("the card must be kept");
-        self.kept_cards.remove(pos);
+        self.kept_cards.swap_remove(pos);
         self.buy_open(card, use_golden_chips)
     }
 

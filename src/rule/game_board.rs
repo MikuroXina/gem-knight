@@ -77,7 +77,7 @@ impl GameBoard {
     pub fn pick_open_card(&'_ mut self, open: OpenCard<'_>) -> Card {
         let picked = self.card_rows[open.source_row_index]
             .open
-            .remove(open.source_row_index);
+            .swap_remove(open.source_row_index);
         self.card_rows[open.source_row_index].update_open();
         picked
     }
