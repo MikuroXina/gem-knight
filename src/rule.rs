@@ -14,32 +14,50 @@ pub mod game_board;
 pub mod noble;
 pub mod player_board;
 
-/// Plays the game and returns a position of the winner.
-pub fn play_game<const N: usize>(mut players: [Box<dyn Player>; N], seed: u64) -> usize {
-    let mut rng = SmallRng::seed_from_u64(seed);
-    let mut game_board = GameBoard::new(
-        players
-            .len()
-            .try_into()
-            .expect("Splendor is only for 2-4 players"),
-        &mut rng,
-    );
-    let mut player_boards = [(); N].map(|_| PlayerBoard::new());
-    const SCORE_THRESHOLD: u8 = 15;
-    while player_boards
-        .iter()
-        .any(|player| SCORE_THRESHOLD <= player.score())
-    {
-        for (player_board, player) in player_boards.iter_mut().zip(players.iter_mut()) {
-            player_turn(player.as_mut(), player_board, &mut game_board);
+pub struct Splendor<const PLAYERS: usize> {
+    game_board: GameBoard,
+    player_boards: [PlayerBoard; PLAYERS],
+    players: [Box<dyn Player>; PLAYERS],
+}
+
+impl<const N: usize> Splendor<N> {
+    pub fn new(players: [Box<dyn Player>; N], seed: u64) -> Self {
+        let mut rng = SmallRng::seed_from_u64(seed);
+        let game_board = GameBoard::new(
+            players
+                .len()
+                .try_into()
+                .expect("Splendor is only for 2-4 players"),
+            &mut rng,
+        );
+        let player_boards = [(); N].map(|_| PlayerBoard::new());
+        Self {
+            game_board,
+            player_boards,
+            players,
         }
     }
-    player_boards
-        .iter()
-        .enumerate()
-        .max_by_key(|(_, board)| board.score())
-        .map(|(idx, _)| idx)
-        .unwrap()
+
+    /// Plays the game and returns a position of the winner.
+    pub fn play_game(&mut self) -> usize {
+        const SCORE_THRESHOLD: u8 = 15;
+        while self
+            .player_boards
+            .iter()
+            .any(|player| SCORE_THRESHOLD <= player.score())
+        {
+            for (player_board, player) in self.player_boards.iter_mut().zip(self.players.iter_mut())
+            {
+                player_turn(player.as_mut(), player_board, &mut self.game_board);
+            }
+        }
+        self.player_boards
+            .iter()
+            .enumerate()
+            .max_by_key(|(_, board)| board.score())
+            .map(|(idx, _)| idx)
+            .unwrap()
+    }
 }
 
 fn player_turn(
