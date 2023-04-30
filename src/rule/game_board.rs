@@ -1,5 +1,6 @@
 use std::marker::PhantomData;
 
+use heapless::Vec;
 use rand::Rng;
 
 use super::{
@@ -12,7 +13,7 @@ use super::{
 #[derive(Debug, Clone)]
 pub struct GameBoard {
     card_rows: [CardRow; 3],
-    nobles: Vec<Noble>,
+    nobles: Vec<Noble, 5>,
     bank: ChipStack,
 }
 
@@ -32,7 +33,7 @@ impl GameBoard {
 
         let card_rows = [level1, level2, level3].map(CardRow::new);
 
-        let picked_nobles: Vec<_> = nobles[..(players as usize) + 1].to_vec();
+        let picked_nobles: Vec<_, 5> = nobles[..(players as usize) + 1].try_into().unwrap();
 
         let using_chips = match players {
             2 => 4,
@@ -120,26 +121,27 @@ impl GameBoard {
 
 #[derive(Debug, Clone)]
 pub struct CardRow {
-    open: Vec<Card>,
-    stock: Vec<Card>,
+    open: Vec<Card, 4>,
+    stock: Vec<Card, 35>,
 }
 
 impl CardRow {
-    fn new(mut shuffled_deck: Vec<Card>) -> Self {
-        let mut open = Vec::with_capacity(4);
+    fn new(mut shuffled_deck: std::vec::Vec<Card>) -> Self {
+        let mut open = Vec::new();
         for _ in 0..4 {
-            open.push(shuffled_deck.pop().expect("amount of deck was too low"));
+            open.push(shuffled_deck.pop().expect("amount of deck was too low"))
+                .unwrap();
         }
         Self {
             open,
-            stock: shuffled_deck,
+            stock: shuffled_deck[..].try_into().unwrap(),
         }
     }
 
     fn update_open(&mut self) {
         while self.open.len() < 4 {
             let Some(top) = self.stock.pop() else { return; };
-            self.open.push(top);
+            self.open.push(top).unwrap();
         }
     }
 

@@ -9,7 +9,7 @@ use super::{
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct PlayerBoard {
     bought_cards: Vec<Card>,
-    kept_cards: Vec<Card>,
+    kept_cards: heapless::Vec<Card, 3>,
     chip_stack: ChipStack,
     visited_nobles: u8,
 }
@@ -19,7 +19,7 @@ impl PlayerBoard {
     pub fn new() -> Self {
         Self {
             bought_cards: Vec::with_capacity(15),
-            kept_cards: Vec::with_capacity(3),
+            kept_cards: heapless::Vec::new(),
             chip_stack: ChipStack::new(),
             visited_nobles: 0,
         }
@@ -101,8 +101,7 @@ impl PlayerBoard {
     }
 
     pub fn keep(&mut self, card: Card) {
-        self.kept_cards.push(card);
-        debug_assert!(self.kept_cards.len() <= 3);
+        self.kept_cards.push(card).unwrap();
     }
 
     pub fn can_welcome_noble(&self, noble: &Noble) -> bool {

@@ -1,8 +1,10 @@
+use heapless::Vec;
+
 use super::card::Gem;
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash)]
 pub struct Noble {
-    pub conditions: Vec<(Gem, u8)>,
+    pub conditions: Vec<(Gem, u8), 3>,
 }
 
 impl Noble {
