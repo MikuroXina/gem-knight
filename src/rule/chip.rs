@@ -47,6 +47,7 @@ impl Chip {
 /// - 13-16 bits: black chips
 /// - 17-20 bits: white chips
 /// - 21-24 bits: golden chips
+#[must_use]
 #[derive(Debug, Default, Clone, Copy, PartialEq, Eq, Hash)]
 pub struct ChipStack(u32);
 
