@@ -82,7 +82,7 @@ impl PlayerBoard {
             paid = paid.add_chips_to(chip, card.cost.cost_by(gem));
         }
         if use_golden_chips {
-            self.chip_stack.sub_chips_to(Chip::Golden, eliminated_costs);
+            self.chip_stack = self.chip_stack.sub_chips_to(Chip::Golden, eliminated_costs);
             paid = paid.add_chips_to(Chip::Golden, eliminated_costs);
         }
         self.bought_cards.push(card);
