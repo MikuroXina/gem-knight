@@ -82,6 +82,15 @@ impl CardCost {
         }
     }
 
+    pub fn color_kinds(&self) -> u8 {
+        Gem::all_gems()
+            .into_iter()
+            .filter(|&gem| 0 < self.cost_by(gem))
+            .count()
+            .try_into()
+            .unwrap()
+    }
+
     pub fn eliminated(&self, chip_stack: ChipStack) -> u8 {
         Gem::all_gems()
             .into_iter()
